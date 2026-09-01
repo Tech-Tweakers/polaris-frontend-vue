@@ -31,6 +31,12 @@ jobs:
         run: npm ci
       
       - name: 🏗️ Build application
+        # As URLs entram no bundle em tempo de build. Sem estas variaveis o
+        # bundle publicado sai apontando para localhost -- ate agora elas vinham
+        # de um .env na maquina de quem buildava, o que nao e' reproduzivel.
+        env:
+          VITE_API_TEXT_URL: ${{ vars.VITE_API_TEXT_URL || 'https://api-v2.techtweakers.org' }}
+          VITE_API_AUDIO_URL: ${{ vars.VITE_API_AUDIO_URL || 'https://int-v2.techtweakers.org' }}
         run: npm run build
       
       - name: 📦 Build Electron (Linux)
