@@ -29,9 +29,14 @@ export async function getJWTToken(): Promise<string> {
             throw new Error('Token da API não configurado no frontend (VITE_API_TOKEN/API_TOKEN)');
         }
 
-        // O endpoint espera parâmetros de query, não FormData
+        // O endpoint espera parâmetros de query, não FormData.
+        // Os valores vão por `params` para que o axios os codifique: interpolar
+        // o secret direto na URL truncava tudo a partir de um '#' (o browser o
+        // trata como início do fragmento) e quebrava com '&', '+' ou '%'.
         const response = await axios.post(
-            `${config.API_BASE_URL}/auth/token?client_name=${CLIENT_NAME}&client_secret=${CLIENT_SECRET}`
+            `${config.API_BASE_URL}/auth/token`,
+            null,
+            { params: { client_name: CLIENT_NAME, client_secret: CLIENT_SECRET } }
         );
 
         const accessToken = response.data?.access_token;
