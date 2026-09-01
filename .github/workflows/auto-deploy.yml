@@ -37,6 +37,9 @@ jobs:
         env:
           VITE_API_TEXT_URL: ${{ vars.VITE_API_TEXT_URL || 'https://api-v2.techtweakers.org' }}
           VITE_API_AUDIO_URL: ${{ vars.VITE_API_AUDIO_URL || 'https://int-v2.techtweakers.org' }}
+          # Secret do web_client, trocado por JWT em /auth/token. Sem ele o
+          # bundle sai sem credencial e toda chamada volta 401.
+          VITE_API_TOKEN: ${{ secrets.VITE_API_TOKEN }}
         run: npm run build
       
       - name: 📦 Build Electron (Linux)
